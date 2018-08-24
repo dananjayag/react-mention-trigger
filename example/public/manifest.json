@@ -1,0 +1,8 @@
+{
+  "short_name": "react-mention-trigger",
+  "name": "react-mention-trigger",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

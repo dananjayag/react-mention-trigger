@@ -1,0 +1,20 @@
+/* add css styles here (optional) */
+
+.test {
+  display: inline-block;
+  margin: 2em auto;
+  border: 2px solid #000;
+  font-size: 2em;
+}
+.suggestion{
+  background-color: #fff;
+  color:#fff;
+  cursor: pointer;
+}
+.active{
+  background-color: #000;
+  color:#fff;
+}
+.suggestionsHolder{
+  background-color: red
+}
