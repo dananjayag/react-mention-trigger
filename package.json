@@ -1,6 +1,6 @@
 {
   "name": "react-mention-trigger",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "it triggers suggestions when user enters the trigger",
   "author": "dananjayag",
   "license": "MIT",

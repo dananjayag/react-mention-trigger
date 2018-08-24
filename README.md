@@ -11,6 +11,8 @@ User can chose one of the suggestions and also it allow user to search space sep
 npm install --save react-mention-trigger
 ```
 ## Demo
+ go to https://github.com/dananjayag/react-mention-trigger#readme
+ 
 ![alt text](http://i.imgur.com/iM6B79t.jpg)
 ## Usage
 
@@ -70,7 +72,37 @@ export default class App extends Component {
                        InputWidth={580}
                        onChange={this.onChange} // Chnage the data based on value entered (Filter)
                        waitTime={100} //Debounce Time
-                       
+
+## Styling                       
+``` 
+  # use these classes for styling and customization
+   
+   #suggestion
+  .suggestion{
+    background-color: bisque;
+    border: 1px solid;
+    }
+
+   #active suggestion
+    .active{
+    background-color: blueviolet;
+    color: #fff;
+    border: 1px solid;
+    }
+    
+    #suggestions parent styling
+    .suggestionsHolder{
+    background-color: black
+    }
+
+    #input element Styling
+    .input-red{
+    background-color: azure;
+    color:red;
+    border-radius: 2px;
+    
+    }
+```
 
 ## License
 
