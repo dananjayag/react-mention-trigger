@@ -43,7 +43,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css = "/* add css styles here (optional) */\n\n.styles_test__3OKZ1 {\n  display: inline-block;\n  margin: 2em auto;\n  border: 2px solid #000;\n  font-size: 2em;\n}\n.styles_suggestion__17cBu{\n  background-color: #fff;\n  color:#fff;\n  cursor: pointer;\n}\n.styles_active__1uozy{\n  background-color: #000;\n  color:#fff;\n}\n.styles_suggestionsHolder__25Gwx{\n  background-color: red\n}\n";
+var css = "/* add css styles here (optional) */\r\n\r\n.styles_test__3OKZ1 {\r\n  display: inline-block;\r\n  margin: 2em auto;\r\n  border: 2px solid #000;\r\n  font-size: 2em;\r\n}\r\n.styles_suggestion__17cBu{\r\n  background-color: #fff;\r\n  color:#fff;\r\n  cursor: pointer;\r\n}\r\n.styles_active__1uozy{\r\n  background-color: #000;\r\n  color:#fff;\r\n}\r\n.styles_suggestionsHolder__25Gwx{\r\n  background-color: red\r\n}\r\n";
 styleInject(css);
 
 var classCallCheck = function (instance, Constructor) {
@@ -70,21 +70,6 @@ var createClass = function () {
   };
 }();
 
-var defineProperty = function (obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-};
-
 var inherits = function (subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -109,6 +94,13 @@ var possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
+/*
+  @const Key Codes
+*/
+var DOWN = 40,
+    UP = 38,
+    ENTER = 13;
+
 var SingleLineMention = function (_Component) {
   inherits(SingleLineMention, _Component);
 
@@ -116,6 +108,64 @@ var SingleLineMention = function (_Component) {
     classCallCheck(this, SingleLineMention);
 
     var _this = possibleConstructorReturn(this, (SingleLineMention.__proto__ || Object.getPrototypeOf(SingleLineMention)).call(this, props));
+
+    _this.findSuggestionBoxPostion = function (value, left) {
+      var index = value.lastIndexOf('@');
+      var key = value.substr(index + 1);
+
+      var filteredSuggestion = _this.props.data.filter(function (item) {
+        return item.indexOf(key) !== -1;
+      });
+      _this.setState({
+        suggestionList: filteredSuggestion,
+        currtIndex: 0,
+        left: left
+      });
+    };
+
+    _this.movingToTop = function () {
+      var newIndex = _this.state.currtIndex - 1;
+      if (newIndex < 0) {
+        newIndex = 0;
+      }
+      _this.setState({
+        currtIndex: newIndex
+      });
+
+      if (typeof _this.inputValue.selectionStart == "number") {
+        _this.inputValue.selectionStart = _this.inputValue.selectionEnd = _this.inputValue.value.length;
+      } else if (typeof _this.inputValue.createTextRange != "undefined") {
+        _this.inputValue.focus();
+        var range = _this.inputValue.createTextRange();
+        range.collapse(false);
+        range.select();
+      }
+    };
+
+    _this.movingDown = function () {
+      var newIndex = _this.state.currtIndex + 1;
+      if (newIndex == _this.state.suggestionList.length) {
+        newIndex = _this.state.suggestionList.length - 1;
+      }
+      _this.setState({
+        currtIndex: newIndex
+      });
+    };
+
+    _this.OnEnterClick = function () {
+      var index = _this.inputValue.value.lastIndexOf(_this.props.trigger || '@');
+      var newValue = "";
+      _this.setState({
+        suggestionList: []
+      });
+      if (_this.inputValue.value.length > 0 && _this.state.suggestionList.length > 0) {
+        newValue = _this.inputValue.value.substr(0, index + 1) + _this.state.suggestionList[_this.state.currtIndex || 0];
+      }
+
+      if (!!newValue) {
+        _this.inputValue.value = newValue;
+      }
+    };
 
     _this.state = {
       suggestionList: [],
@@ -144,6 +194,9 @@ var SingleLineMention = function (_Component) {
         }
       });
     }
+
+    //Async call to get Suggestions
+
   }, {
     key: 'call_parent',
     value: function call_parent(value) {
@@ -151,9 +204,15 @@ var SingleLineMention = function (_Component) {
         this.props.onChange(value);
       }
     }
+
+    //when  onBlur props is not provided
+
   }, {
     key: 'onBlur',
     value: function onBlur(e) {}
+
+    // When Suggestion Selected
+
   }, {
     key: 'appendValue',
     value: function appendValue(value) {
@@ -169,6 +228,9 @@ var SingleLineMention = function (_Component) {
       }
       this.inputValue.focus();
     }
+
+    // Finding Suggestion Box Postion Dynamically
+
   }, {
     key: 'onChange',
     value: function onChange(e) {
@@ -179,73 +241,42 @@ var SingleLineMention = function (_Component) {
       if (e.target.value) {
         var value = e.target.value;
         var left = value.length * this.props.fontSize > width ? width - 60 : value.length * (8 - 1);
-        if (value.length > 1) {
-          var index = value.lastIndexOf('@');
-          var key = value.substr(index + 1);
 
-          var filteredSuggestion = this.props.data.filter(function (item) {
-            return item.indexOf(key) !== -1;
-          });
-          this.setState({
-            suggestionList: filteredSuggestion,
-            currtIndex: 0,
-            left: left
-          });
-        } else {
-          this.setState({
-            suggestionList: [],
-            currtIndex: 0,
-            left: left
-          });
+        // Finding Postion Dynamically when the length is greater than 1
+        if (value.length > 1) {
+
+          this.findSuggestionBoxPostion(value, left);
         }
+        // Keeping Suggestion Box at default position
+        else {
+            this.setState({
+              suggestionList: [],
+              currtIndex: 0,
+              left: left
+            });
+          }
         this.inputValue.focus();
       }
     }
+
+    //moving to the top of the Suggestions List
+
+    //moving to the Bottom of the Suggestions List
+
+    //Suggestion Selected with Enter
+
   }, {
     key: 'keyUpHandle',
     value: function keyUpHandle(e) {
       e.preventDefault();
 
-      var DOWN = 40,
-          UP = 38;
-      if (e.keyCode == 13 || e.target.keyCode == 13) {
-        var index = this.inputValue.value.lastIndexOf(this.props.trigger || '@');
-        var newValue = "";
-        this.setState({
-          suggestionList: []
-        });
-        if (this.inputValue.value.length > 0 && this.state.suggestionList.length > 0) {
-          newValue = this.inputValue.value.substr(0, index + 1) + this.state.suggestionList[this.state.currtIndex || 0];
-        }
+      if (e.keyCode == ENTER || e.target.keyCode == ENTER) {
 
-        if (!!newValue) {
-          this.inputValue.value = newValue;
-        }
+        this.OnEnterClick();
       } else if (e.keyCode == DOWN) {
-        var newIndex = this.state.currtIndex + 1;
-        if (newIndex == this.state.suggestionList.length) {
-          newIndex = this.state.suggestionList.length - 1;
-        }
-        this.setState({
-          currtIndex: newIndex
-        });
+        this.movingDown();
       } else if (e.keyCode == UP) {
-        var _newIndex = this.state.currtIndex - 1;
-        if (_newIndex < 0) {
-          _newIndex = 0;
-        }
-        this.setState({
-          currtIndex: _newIndex
-        });
-
-        if (typeof this.inputValue.selectionStart == "number") {
-          this.inputValue.selectionStart = this.inputValue.selectionEnd = this.inputValue.value.length;
-        } else if (typeof this.inputValue.createTextRange != "undefined") {
-          this.inputValue.focus();
-          var range = this.inputValue.createTextRange();
-          range.collapse(false);
-          range.select();
-        }
+        this.movingToTop();
       }
     }
   }, {
@@ -257,6 +288,9 @@ var SingleLineMention = function (_Component) {
       var left = this.state.left;
 
       var parentStyle = this.props.suggestionsHolder ? this.props.suggestionsHolder : 'suggestionsHolder';
+
+      // Rendering Suggestion List
+
       if (this.state.suggestionList) {
         optionList = this.state.suggestionList.map(function (item, index) {
           return React.createElement(
@@ -269,12 +303,13 @@ var SingleLineMention = function (_Component) {
         });
       }
 
+      // Input Box
       return React.createElement(
         'div',
         { id: 'suggestion-input', style: { display: "inline-block", position: "relative", width: '' + (this.props.InputWidth || 50) } },
-        React.createElement('input', defineProperty({ 'class': this.props.inputClassName || "", id: 'input', autoFocus: true, onKeyUp: this.keyUpHandle, onBlur: this.onBlur, style: { fontSize: this.props.fontSize || 8, width: this.props.InputWidth || 180 }, ref: function ref(inpt) {
+        React.createElement('input', { 'class': this.props.inputClassName || "", id: 'input', autoFocus: true, onKeyUp: this.keyUpHandle, style: { fontSize: this.props.fontSize || 8, width: this.props.InputWidth || 180 }, ref: function ref(inpt) {
             _this3.inputValue = inpt;
-          }, onChange: this.onChange }, 'onBlur', this.onBlur)),
+          }, onChange: this.onChange, onBlur: this.onBlur }),
         React.createElement(
           'div',
           { id: 'suggestions', className: parentStyle, style: { position: 'absolute', left: left + 'px' } },
