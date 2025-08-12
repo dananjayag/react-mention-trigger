@@ -1,0 +1,24 @@
+HTTP/2 308 
+date: Tue, 12 Aug 2025 20:16:32 GMT
+content-type: text/html
+content-length: 169
+location: https://chatgpt.com/backend-api/share/689ba09a-8838-8010-9993-9a2a17e1f947
+cache-control: private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+expires: Thu, 01 Jan 1970 00:00:01 GMT
+report-to: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=xvBfimeth%2B5ZqHWbdTdUy7GnIJlo37uyshFRbxBXrShX2eYRSlMkzhspRWWySat7MukMdCe7HBGbTUVBqi2Ia4ZBcQGNWM7e%2BP3SUNFQN2VWY%2Fcku7E0%2Fke9T1gPnZn3cg%3D%3D"}],"group":"cf-nel","max_age":604800}
+nel: {"success_fraction":0.01,"report_to":"cf-nel","max_age":604800}
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+x-content-type-options: nosniff
+cross-origin-opener-policy: same-origin-allow-popups
+referrer-policy: strict-origin-when-cross-origin
+x-robots-tag: nofollow
+server: cloudflare
+cf-ray: 96e2a6aac9d86c24-PDX
+
+<html>
+<head><title>308 Permanent Redirect</title></head>
+<body>
+<center><h1>308 Permanent Redirect</h1></center>
+<hr><center>cloudflare</center>
+</body>
+</html>
